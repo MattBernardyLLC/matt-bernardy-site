@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <title>Matt Bernardy - Marketing Engine Builder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Permanent+Marker&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --whiteboard: #fafafa;
+            --off-white: #f5f5f0;
+            --sticky-yellow: #fff740;
+            --sticky-blue: #9ddbf5;
+            --sticky-green: #b4f7a8;
+            --sticky-pink: #ffb3d9;
+            --sage: #8fb4b8;
+            --sage-dark: #6f9498;
+            --marker-black: #2d3436;
+            --marker-blue: #0984e3;
+            --marker-red: #d63031;
+            --shadow: rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #ffffff;
+            color: var(--marker-black);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Caveat', cursive;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(250, 250, 250, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            border-bottom: 3px solid var(--marker-black);
+            box-shadow: 0 4px 6px var(--shadow);
+        }
+
+        nav .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 1.8rem;
+            color: var(--marker-black);
+            letter-spacing: 0.05em;
+            flex-shrink: 0;
+            text-decoration: none;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 4px;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: var(--sticky-yellow);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover::after {
+            transform: scaleX(1);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.75rem;
+            align-items: center;
+            flex-wrap: nowrap;
+        }
+
+        nav li {
+            flex-shrink: 0;
+        }
+
+        nav a {
+            color: var(--marker-black);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-family: 'Caveat', cursive;
+            font-size: 1.3rem;
+            position: relative;
+            white-space: nowrap;
+            display: inline-block;
+            padding-bottom: 4px;
+        }
+
+        nav a:not(.nav-cta)::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: var(--sticky-yellow);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        nav a:not(.nav-cta):hover::after {
+            transform: scaleX(1);
+        }
+
+        .nav-cta {
+            background: var(--sticky-yellow);
+            color: var(--marker-black);
+            padding: 0.5rem 1.25rem;
+            border: 3px solid var(--marker-black);
+            font-weight: 700;
+            box-shadow: 3px 3px 0 var(--marker-black);
+            transform: rotate(-1deg);
+            transition: all 0.3s;
+        }
+
+        .nav-cta:hover {
+            transform: rotate(0deg) translateY(-3px);
+            box-shadow: 5px 5px 0 var(--marker-black);
+        }
+
+        /* Sticky Note Card System */
+        .sticky-note {
+            background: var(--sticky-yellow);
+            padding: 2.5rem;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+            position: relative;
+            transform: rotate(-0.5deg);
+            transition: all 0.3s;
+        }
+
+        .sticky-note::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .sticky-note:hover {
+            transform: rotate(0deg) translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .sticky-blue {
+            background: var(--sticky-blue);
+            transform: rotate(0.5deg);
+        }
+
+        .sticky-green {
+            background: var(--sticky-green);
+            transform: rotate(-1deg);
+        }
+
+        .sticky-pink {
+            background: var(--sticky-pink);
+            transform: rotate(1deg);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 3rem 4rem;
+            position: relative;
+        }
+
+        .hero-card {
+            max-width: 1200px;
+            background: white;
+            padding: 4rem;
+            border: 4px solid var(--marker-black);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 4rem;
+            align-items: start;
+            transform: rotate(-0.3deg);
+        }
+
+        .hero-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero-meta {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 0.9rem;
+            color: var(--marker-blue);
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            position: relative;
+        }
+
+        .hero h1 .highlight {
+            color: var(--marker-blue);
+            background: linear-gradient(to top, var(--sticky-yellow) 18%, transparent 18%);
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+            padding: 0 0.1em;
+        }
+
+        .hero .tagline {
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--marker-blue);
+            font-weight: 700;
+        }
+
+        .hero .description {
+            font-size: 1.1rem;
+            color: var(--marker-black);
+            margin-bottom: 2.5rem;
+            line-height: 1.7;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            background: var(--sticky-yellow);
+            color: var(--marker-black);
+            padding: 1.2rem 2.5rem;
+            text-decoration: none;
+            font-weight: 700;
+            font-family: 'Caveat', cursive;
+            font-size: 1.8rem;
+            border: 3px solid var(--marker-black);
+            box-shadow: 4px 4px 0 var(--marker-black);
+            transition: all 0.3s;
+            transform: rotate(-2deg);
+        }
+
+        .hero-cta:hover {
+            transform: rotate(0deg) translateY(-3px);
+            box-shadow: 6px 6px 0 var(--marker-black);
+        }
+
+        /* Image Styling - Polaroid Style */
+        .hero-image-wrapper {
+            background: white;
+            padding: 1rem;
+            border: 3px solid var(--marker-black);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+            transform: rotate(2deg);
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+
+        .hero-image-wrapper:hover {
+            transform: rotate(0deg) translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .hero-image-wrapper img {
+            display: block;
+            width: 350px;
+            height: 350px;
+            object-fit: cover;
+        }
+
+        .hero-image-wrapper::after {
+            content: 'Matt Bernardy';
+            display: block;
+            text-align: center;
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+            margin-top: 0.75rem;
+            color: var(--marker-black);
+        }
+
+        /* Section Base */
+        .section {
+            padding: 6rem 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .section-meta {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 0.9rem;
+            color: var(--marker-blue);
+            margin-bottom: 1rem;
+            letter-spacing: 0.1em;
+        }
+
+        .section-title {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: -10px;
+            right: -10px;
+            height: 8px;
+            background: var(--sticky-yellow);
+            z-index: -1;
+            transform: rotate(-0.5deg);
+        }
+
+        .section-description {
+            font-size: 1.15rem;
+            color: var(--marker-black);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* Approach Grid */
+        .approach-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .approach-card {
+            background: white;
+            border: 3px solid var(--marker-black);
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+            transform: rotate(-0.5deg);
+        }
+
+        .approach-card:nth-child(2) {
+            transform: rotate(0.5deg);
+        }
+
+        .approach-card h3 {
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
+            color: var(--marker-blue);
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .approach-card h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--sage);
+        }
+
+        .phase {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--sticky-yellow);
+            border-left: 5px solid var(--marker-black);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .phase:nth-child(even) {
+            background: var(--sticky-blue);
+        }
+
+        .phase:nth-child(3n) {
+            background: var(--sticky-green);
+        }
+
+        .phase h4 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--marker-black);
+        }
+
+        .phase p {
+            color: var(--marker-black);
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        /* Track Record Grid */
+        .track-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+            margin-top: 4rem;
+        }
+
+        .track-grid-results {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1.5rem;
+            margin-top: 2.5rem;
+        }
+
+        .track-card-small {
+            padding: 1.5rem;
+            border: 3px solid var(--marker-black);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+            transition: all 0.3s;
+        }
+
+        .track-card-small h4 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--marker-black);
+        }
+
+        .track-card-small p {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: var(--marker-black);
+        }
+
+        .track-card-small:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .track-card {
+            padding: 2rem;
+            border: 3px solid var(--marker-black);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .track-card:nth-child(1) {
+            background: var(--sticky-pink);
+            transform: rotate(-1deg);
+        }
+
+        .track-card:nth-child(2) {
+            background: var(--sticky-blue);
+            transform: rotate(0.5deg);
+        }
+
+        .track-card:nth-child(3) {
+            background: var(--sticky-green);
+            transform: rotate(-0.5deg);
+        }
+
+        .track-card:nth-child(4) {
+            background: var(--sticky-pink);
+            transform: rotate(1deg);
+        }
+
+        .track-card:nth-child(5) {
+            background: var(--sticky-yellow);
+            transform: rotate(-0.8deg);
+        }
+
+        .track-card:nth-child(6) {
+            background: var(--sticky-blue);
+            transform: rotate(0.3deg);
+        }
+
+        .track-card:hover {
+            transform: rotate(0deg) translateY(-8px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .company-tag {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 0.75rem;
+            color: var(--marker-black);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .track-card h4 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--marker-black);
+        }
+
+        .track-card p {
+            color: var(--marker-black);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .metric {
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--marker-black);
+            font-family: 'Permanent Marker', cursive;
+            margin: 1rem 0;
+            line-height: 1;
+            position: relative;
+        }
+
+
+        .metric.has-percent::after {
+            content: '%';
+            color: var(--marker-red);
+        }
+
+        .metric.has-x::after {
+            content: 'x';
+            color: var(--marker-red);
+            font-size: 0.6em;
+            margin-left: 0.1em;
+        }
+
+        .metric-label {
+            font-family: 'Caveat', cursive;
+            font-size: 1.1rem;
+            color: var(--marker-black);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+        }
+
+        /* Services */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .service-card {
+            background: white;
+            border: 4px solid var(--marker-black);
+            padding: 3rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+            transition: all 0.3s;
+        }
+
+        .service-card:nth-child(1) {
+            transform: rotate(-0.5deg);
+        }
+
+        .service-card:nth-child(2) {
+            transform: rotate(0.5deg);
+        }
+
+        .service-card:hover {
+            transform: rotate(0deg) translateY(-8px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .service-card h3 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--marker-blue);
+        }
+
+        .service-tag {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 0.9rem;
+            color: var(--marker-red);
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .service-card p {
+            color: var(--marker-black);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .service-card ul {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .service-card li {
+            color: var(--marker-black);
+            padding-left: 2rem;
+            margin-bottom: 0.75rem;
+            position: relative;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .service-card li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--marker-blue);
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+
+        .ideal-for {
+            background: var(--sticky-yellow);
+            padding: 1.5rem;
+            border: 3px solid var(--marker-black);
+            font-size: 0.95rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .ideal-for strong {
+            font-family: 'Caveat', cursive;
+            color: var(--marker-black);
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        /* Contact */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .contact-card {
+            background: white;
+            border: 4px solid var(--marker-black);
+            padding: 3rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .contact-card:nth-child(1) {
+            transform: rotate(-0.5deg);
+        }
+
+        .contact-card:nth-child(2) {
+            transform: rotate(0.5deg);
+        }
+
+        .contact-card h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--marker-blue);
+        }
+
+        .contact-card p {
+            color: var(--marker-black);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .contact-item {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--sticky-yellow);
+            border-left: 5px solid var(--sage);
+        }
+
+        .contact-label {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 0.75rem;
+            color: var(--marker-black);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-value {
+            font-size: 1.1rem;
+            color: var(--marker-black);
+            font-weight: 600;
+        }
+
+        .contact-value a {
+            color: var(--marker-black);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .contact-value a:hover {
+            color: var(--sage-dark);
+        }
+
+        .criteria-list {
+            list-style: none;
+        }
+
+        .criteria-list h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--marker-black);
+        }
+
+        .criteria-list li {
+            padding-left: 2rem;
+            margin-bottom: 0.75rem;
+            position: relative;
+            color: var(--marker-black);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .criteria-list.negative li::before {
+            content: '✗';
+            position: absolute;
+            left: 0;
+            color: var(--marker-red);
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+
+        .criteria-list.positive {
+            margin-top: 2rem;
+        }
+
+        .criteria-list.positive h3 {
+            color: var(--marker-blue);
+        }
+
+        .criteria-list.positive li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--marker-blue);
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 3rem;
+            border-top: 4px solid var(--marker-black);
+            text-align: center;
+            font-family: 'Caveat', cursive;
+            font-size: 1.2rem;
+            color: var(--marker-black);
+            background: var(--sticky-yellow);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .approach-grid,
+            .services-grid,
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .track-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .track-grid-results {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .hero-card {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            nav ul {
+                gap: 1rem;
+                font-size: 1.1rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-card {
+                padding: 2.5rem;
+            }
+
+            .hero-image-wrapper {
+                margin: 0 auto;
+            }
+
+            .hero-image-wrapper img {
+                width: 250px;
+                height: 250px;
+            }
+
+            .section {
+                padding: 4rem 1.5rem;
+            }
+
+            .section-title {
+                font-size: 2.5rem;
+            }
+
+            .track-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .track-grid-results {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .metric {
+                font-size: 3rem;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="#home" class="logo">MB</a>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#positioning">Who I Am</a></li>
+                <li><a href="#ai">AI Expertise</a></li>
+                <li><a href="#track-record">Track Record</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="blog-index.html">Resources</a></li>
+                <li><a href="#contact" class="nav-cta">Get in Touch</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="hero-card">
+            <div class="hero-content">
+                <div class="hero-meta">MARKETING ENGINE BUILDER</div>
+                <h1>I build Marketing Engines <span class="highlight">Grounded in Market Insight</span>, Enabled by AI</h1>
+                <p class="description">I don't give you strategy decks and best practices. I build marketing functions from scratch: teams, systems, and AI-powered workflows that scale revenue. Two decades turning customer data and market insights into measurable growth for Series A-C startups.</p>
+                <a href="#contact" class="hero-cta">Let's Build Together</a>
+            </div>
+            <div class="hero-image-wrapper">
+                <img src="Website Headshot.jpg" alt="Matt Bernardy">
+            </div>
+        </div>
+    </section>
+
+    <section id="positioning" class="section">
+        <div class="section-header">
+            <div class="section-meta">WHO I AM</div>
+            <h2 class="section-title">Most Marketing Consultants Talk. I Build.</h2>
+            <p class="section-description">I'm not here just to share opinions. I've built marketing orgs twice from the ground up, from first marketer through acquisition, from zero infrastructure to sustained growth. Every recommendation I make is grounded in data I've collected, systems I've built, or results I've personally delivered.</p>
+        </div>
+        <div class="approach-grid">
+            <div class="approach-card">
+                <h3>Builder, Not Consultant</h3>
+                <div class="phase">
+                    <h4>Hands-On Execution</h4>
+                    <p>I don't hand you a strategy deck and walk away. I build teams, systems, and infrastructure myself—then hand you the keys.</p>
+                </div>
+                <div class="phase">
+                    <h4>Data-Driven Decisions</h4>
+                    <p>Statistical models to define ICPs. Reporting infrastructure CEOs actually use. Every recommendation backed by evidence, not opinions.</p>
+                </div>
+                <div class="phase">
+                    <h4>Systems That Scale</h4>
+                    <p>Processes and infrastructure designed to keep delivering results long after our engagement ends.</p>
+                </div>
+            </div>
+
+            <div class="approach-card">
+                <h3>What Sets Me Apart</h3>
+                <div class="phase">
+                    <h4>Two Decades of Building</h4>
+                    <p>Not advising from the sidelines—actually constructing marketing engines that drive measurable growth.</p>
+                </div>
+                <div class="phase">
+                    <h4>Startup to Exit</h4>
+                    <p>I've been through the full journey: Seed to Series C, $500K to $25M ARR, through acquisition and beyond.</p>
+                </div>
+                <div class="phase">
+                    <h4>Revenue Accountability</h4>
+                    <p>I own pipeline targets, manage P&L, and tie every initiative to metrics that matter to the business.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="ai" class="section">
+        <div class="section-header">
+            <div class="section-meta">AI IN MARKETING</div>
+            <h2 class="section-title">Building AI-Powered Marketing Systems</h2>
+            <p class="section-description">I don't just talk about AI—I implement it. While other marketers experiment with prompts, I'm operationalizing AI to deliver compound gains across the entire marketing function.</p>
+        </div>
+        <div class="approach-grid">
+            <div class="approach-card">
+                <h3>AI Implementation</h3>
+                <div class="phase">
+                    <h4>Content Workflows</h4>
+                    <p>AI-enabled content development systems that scale output without sacrificing quality or brand voice.</p>
+                </div>
+                <div class="phase">
+                    <h4>Demand Generation</h4>
+                    <p>AI-powered targeting, personalization, and optimization across acquisition channels.</p>
+                </div>
+                <div class="phase">
+                    <h4>Marketing Operations</h4>
+                    <p>Automated reporting, data enrichment, and process optimization that free your team for strategic work.</p>
+                </div>
+            </div>
+
+            <div class="approach-card">
+                <h3>Beyond Experiments</h3>
+                <div class="phase">
+                    <h4>Production Ready</h4>
+                    <p>Not proof-of-concepts or demos. Real workflows integrated into daily operations that deliver measurable results.</p>
+                </div>
+                <div class="phase">
+                    <h4>Compound Gains</h4>
+                    <p>Each AI system builds on others—efficiency improvements that multiply across the marketing function.</p>
+                </div>
+                <div class="phase">
+                    <h4>Team Enablement</h4>
+                    <p>Tools that make your people more effective, not replace them. AI handles the repeatable; humans handle the strategic.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="approach" class="section">
+        <div class="section-header">
+            <div class="section-meta">MY APPROACH</div>
+            <h2 class="section-title">Building Marketing Engines in 6 Months</h2>
+            <p class="section-description">Most startups ready to scale have junior marketers executing tactics without data to guide them. The result? Random acts of marketing that burn budget without moving metrics. My approach is different: I start with customer research and market data, build measurement frameworks first, then construct teams and systems around what the data tells us will work. Every phase is testable, measurable, and grounded in evidence.</p>
+        </div>
+        <div class="approach-grid">
+            <div class="approach-card">
+                <h3>Market Strategy</h3>
+                <div class="phase">
+                    <h4>Phase 1: Customer Discovery</h4>
+                    <p>Conduct customer conversations and attend industry events. Deliver market readout grounded in real insight.</p>
+                </div>
+                <div class="phase">
+                    <h4>Phase 2: Experimentation</h4>
+                    <p>Test messaging, channels, tactics. Measure outcomes consistently with focus on pipeline.</p>
+                </div>
+                <div class="phase">
+                    <h4>Phase 3: Scale What Works</h4>
+                    <p>Build cohesive plan around proven tactics. Create compelling narrative and measurement frameworks.</p>
+                </div>
+            </div>
+
+            <div class="approach-card">
+                <h3>Team & Systems</h3>
+                <div class="phase">
+                    <h4>Phase 1: Company Discovery</h4>
+                    <p>Dive into GTM data, product analytics, competitive landscape. Interview internal team.</p>
+                </div>
+                <div class="phase">
+                    <h4>Phase 2: Operational Rhythm</h4>
+                    <p>Establish 1:1s, business meetings, AI innovation discussions. Define culture and expectations.</p>
+                </div>
+                <div class="phase">
+                    <h4>Phase 3: Hire the Team</h4>
+                    <p>Build capacity to create, distribute, and measure. Hire for strategic problems, leverage AI for repeatable processes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="track-record" class="section">
+        <div class="section-header">
+            <div class="section-meta">PROVEN RESULTS</div>
+            <h2 class="section-title">What I've Built</h2>
+            <p class="section-description">Two decades building marketing functions that scale revenue and optimize unit economics. From Series A to public businesses, I've built marketing engines at startups that drive measurable growth.</p>
+        </div>
+        <div class="track-grid">
+            <div class="track-card">
+                <span class="company-tag">Area360 (Acquired by TixTrack)</span>
+                <h4>Launched Product to Market</h4>
+                <p>Joined as Product Marketing Lead to establish the go-to-market strategy for a SaaS ticketing platform. Built branding, positioning, marketing collateral, and sales enablement from scratch. Drove customer adoption through direct engagement.</p>
+            </div>
+
+            <div class="track-card">
+                <span class="company-tag">Knock Rentals (Acquired by RealPage)</span>
+                <h4>Built Engine From Zero</h4>
+                <p>Recruited as the first marketer at Seed stage. Built the GTM infrastructure from scratch: demand generation, SDR team, product marketing, content systems, and marketing operations. Scaled the business from Seed to Series B, growing the team from 1 to 8.</p>
+            </div>
+
+            <div class="track-card">
+                <span class="company-tag">Swing Education (FastCo Most Innovative)</span>
+                <h4>Scaled Growth Engine</h4>
+                <p>Recruited to rebuild the marketing team, establish a clear growth strategy, and accelerate revenue for a K-12 substitute marketplace. Built focused B2B and B2C acquisition engines. Led a team of 12.</p>
+            </div>
+        </div>
+
+        <div class="track-grid-results">
+            <div class="track-card-small" style="background: var(--sticky-pink); transform: rotate(-0.5deg);">
+                <h4>$500K ARR</h4>
+                <p>Generated within four months of product launch.</p>
+            </div>
+
+            <div class="track-card-small" style="background: var(--sticky-pink); transform: rotate(0.5deg);">
+                <h4>GTM from Zero</h4>
+                <p>Built complete branding, positioning, and sales enablement based on direct customer interaction.</p>
+            </div>
+
+            <div class="track-card-small" style="background: var(--sticky-blue); transform: rotate(-0.3deg);">
+                <h4>32% Pipeline</h4>
+                <p>Generated through ABM strategy targeting enterprise accounts.</p>
+            </div>
+
+            <div class="track-card-small" style="background: var(--sticky-blue); transform: rotate(0.6deg);">
+                <h4>$1M New Product</h4>
+                <p>Identified, validated, and launched; exceeded targets by 40%.</p>
+            </div>
+
+            <div class="track-card-small" style="background: var(--sticky-green); transform: rotate(-0.4deg);">
+                <h4>130% More Leads</h4>
+                <p>While decreasing acquisition costs by 14%.</p>
+            </div>
+
+            <div class="track-card-small" style="background: var(--sticky-green); transform: rotate(0.3deg);">
+                <h4>3x LTV/CAC</h4>
+                <p>Tripled unit economics through systematic optimization.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="section">
+        <div class="section-header">
+            <div class="section-meta">HOW WE WORK TOGETHER</div>
+            <h2 class="section-title">Choose Your Engagement Model</h2>
+            <p class="section-description">From hands-on fractional leadership to strategic advisory support—select the model that fits your needs.</p>
+        </div>
+        <div class="services-grid">
+            <div class="service-card">
+                <h3>Embedded Builder</h3>
+                <span class="service-tag">2-3 days per week</span>
+                <p>I become your marketing leader and build the function hands-on: set strategy, build the team, establish systems, and create the operational foundation you need for scale.</p>
+                <ul>
+                    <li>Set comprehensive marketing strategy</li>
+                    <li>Build and manage your marketing team</li>
+                    <li>Establish operational systems</li>
+                    <li>Build data infrastructure and reporting systems</li>
+                    <li>Implement AI workflows across marketing functions</li>
+                    <li>Join customer calls for real insight</li>
+                    <li>Allocate budget and own P&L</li>
+                    <li>Define what you need in full-time CMO</li>
+                </ul>
+                <div class="ideal-for">
+                    <strong>Ideal for:</strong>
+                    Series A-C companies ($5-25M ARR) ready to scale but not ready for full-time CMO.
+                </div>
+            </div>
+
+            <div class="service-card">
+                <h3>Builder's Advisory</h3>
+                <span class="service-tag">1 day per week</span>
+                <p>Your marketing leader has the skills but needs a builder's perspective. I guide team development, systems design, and execution challenges while they own the outcomes.</p>
+                <ul>
+                    <li>Guide execution strategy and priorities</li>
+                    <li>Coach first-time marketing VPs/Directors</li>
+                    <li>Audit marketing data quality and measurement frameworks</li>
+                    <li>Guide AI tool evaluation and adoption</li>
+                    <li>Problem-solve sales relationships</li>
+                    <li>Advise on product partnerships</li>
+                    <li>Support board presentation prep</li>
+                </ul>
+                <div class="ideal-for">
+                    <strong>Ideal for:</strong>
+                    Marketing leaders who need sounding board with hands-on building experience.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="section">
+        <div class="section-header">
+            <div class="section-meta">LET'S CONNECT</div>
+            <h2 class="section-title">Get in Touch</h2>
+        </div>
+        <div class="contact-grid">
+            <div class="contact-card">
+                <h2>Let's Connect</h2>
+                <p>Whether you need fractional CMO support, want to build a marketing team, or need strategic guidance, I'd love to hear about your challenges.</p>
+                <div class="contact-item">
+                    <div class="contact-label">email</div>
+                    <div class="contact-value"><a href="mailto:hello@mattbernardy.com">hello@mattbernardy.com</a></div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-label">linkedin</div>
+                    <div class="contact-value"><a href="https://linkedin.com/in/mattbernardy" target="_blank">linkedin.com/in/mattbernardy</a></div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-label">location</div>
+                    <div class="contact-value">Seattle, WA</div>
+                </div>
+            </div>
+
+            <div class="contact-card">
+                <div class="criteria-list negative">
+                    <h3>I'm Not Right For You If:</h3>
+                    <ul>
+                        <li>You want brand strategy and creative concepts without execution</li>
+                        <li>You want someone who validates your existing approach</li>
+                        <li>You're looking for an agency to outsource to</li>
+                        <li>You need more opinions, not measurable results</li>
+                    </ul>
+                </div>
+                <div class="criteria-list positive">
+                    <h3>I'm Perfect For You If:</h3>
+                    <ul>
+                        <li>You need someone to build the marketing function from data up</li>
+                        <li>Your marketing feels chaotic and you can't measure what's working</li>
+                        <li>You want AI-powered systems, not just AI experiments</li>
+                        <li>You need hands-on building backed by two decades of evidence</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        &copy; 2026 Matt Bernardy - Building marketing engines that scale
+    </footer>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
