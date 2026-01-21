@@ -51,4 +51,4 @@ By aligning marketing strategy to the needs of the customer, we changed the traj
 ---
 **Category:** Case Studies
 **Meta description:** How redesigning demand gen around supply reliability drove 3x improvement in LTV/CAC and 125% increase in school partner LTV at Swing Education.
-**Slug:** /blog/swing-demand-gen-system.html
+**Slug:** /blog/swing-demand-gen-system
