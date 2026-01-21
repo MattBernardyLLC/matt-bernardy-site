@@ -1,4 +1,4 @@
-# The Four-Year Road to 3x LTV/CAC: A Demand Gen Case Study
+# How I Improved LTV/CAC by 3x: A Demand Gen Case Study
 
 When I joined Swing Education, we were generating thousands of substitute teacher leads. The top of the funnel looked healthy. But fill rates were inconsistent, which meant revenue was capped by supply, not demand. We couldn't figure out why more spend wasn't translating into more supply.
 
