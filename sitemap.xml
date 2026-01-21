@@ -20,4 +20,8 @@
     <loc>https://www.mattbernardy.com/blog/swing-demand-gen-system</loc>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://www.mattbernardy.com/blog/ai-content-engine</loc>
+    <priority>0.7</priority>
+  </url>
 </urlset>

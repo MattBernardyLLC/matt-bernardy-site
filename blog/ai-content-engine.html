@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <title>How I Built an AI Content Engine in Claude Code - Matt Bernardy</title>
+    <meta name="description" content="I built an AI content system in Claude Code that takes me from interview to published blog post. Here's exactly how it works and what I learned building it.">
+    <meta property="og:title" content="How I Built an AI Content Engine in Claude Code">
+    <meta property="og:description" content="I built an AI content system in Claude Code that takes me from interview to published blog post. Here's exactly how it works and what I learned building it.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://www.mattbernardy.com/blog/ai-content-engine">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Permanent+Marker&family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --whiteboard: #fafafa;
+            --sticky-yellow: #fff740;
+            --sticky-blue: #9ddbf5;
+            --sticky-green: #b4f7a8;
+            --sticky-pink: #ffb3d9;
+            --marker-black: #2d3436;
+            --marker-blue: #0984e3;
+            --marker-red: #d63031;
+            --shadow: rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #ffffff;
+            color: var(--marker-black);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(250, 250, 250, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            border-bottom: 3px solid var(--marker-black);
+            box-shadow: 0 4px 6px var(--shadow);
+        }
+
+        nav .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 1.8rem;
+            color: var(--marker-black);
+            letter-spacing: 0.05em;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.75rem;
+            align-items: center;
+            flex-wrap: nowrap;
+        }
+
+        nav li {
+            flex-shrink: 0;
+        }
+
+        nav a {
+            color: var(--marker-black);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-family: 'Caveat', cursive;
+            font-size: 1.3rem;
+            position: relative;
+            white-space: nowrap;
+            display: inline-block;
+            padding-bottom: 4px;
+        }
+
+        nav a:not(.nav-cta)::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: var(--sticky-yellow);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        nav a:not(.nav-cta):hover::after {
+            transform: scaleX(1);
+        }
+
+        .nav-cta {
+            background: var(--sticky-yellow);
+            color: var(--marker-black);
+            padding: 0.5rem 1.25rem;
+            border: 3px solid var(--marker-black);
+            font-weight: 700;
+            box-shadow: 3px 3px 0 var(--marker-black);
+            transform: rotate(-1deg);
+            transition: all 0.3s;
+        }
+
+        .nav-cta:hover {
+            transform: rotate(0deg) translateY(-3px);
+            box-shadow: 5px 5px 0 var(--marker-black);
+        }
+
+        /* Article Container */
+        article {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 10rem 2rem 6rem;
+        }
+
+        /* Back Link */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Caveat', cursive;
+            font-size: 1.2rem;
+            color: var(--marker-black);
+            text-decoration: none;
+            margin-bottom: 2rem;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--marker-blue);
+        }
+
+        .back-link::before {
+            content: '←';
+        }
+
+        /* Article Header */
+        .article-header {
+            margin-bottom: 3rem;
+        }
+
+        .article-date {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 0.85rem;
+            color: var(--marker-blue);
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        .article-title {
+            font-family: 'Lora', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--marker-black);
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        .article-category {
+            display: inline-block;
+            font-family: 'Caveat', cursive;
+            font-size: 1.1rem;
+            color: var(--marker-blue);
+        }
+
+        /* Article Content */
+        .article-content {
+            font-family: 'Lora', serif;
+            font-size: 1.15rem;
+            line-height: 1.9;
+            color: #333;
+        }
+
+        .article-content p {
+            margin-bottom: 1.75rem;
+        }
+
+        .article-content h2 {
+            font-family: 'Caveat', cursive;
+            font-size: 2rem;
+            color: var(--marker-black);
+            margin: 3rem 0 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .article-content h2::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: -3px;
+            right: -3px;
+            height: 8px;
+            background: var(--sticky-yellow);
+            z-index: -1;
+        }
+
+        .article-content h3 {
+            font-family: 'Caveat', cursive;
+            font-size: 1.6rem;
+            color: var(--marker-black);
+            margin: 2.5rem 0 1rem;
+        }
+
+        .article-content em {
+            font-style: italic;
+        }
+
+        .article-content strong {
+            font-weight: 700;
+        }
+
+        .article-content a {
+            color: var(--marker-blue);
+            text-decoration: underline;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 2px;
+        }
+
+        .article-content a:hover {
+            background: var(--sticky-yellow);
+        }
+
+        .article-content blockquote {
+            background: var(--sticky-yellow);
+            border-left: 5px solid var(--marker-black);
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            font-style: italic;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .article-content ul,
+        .article-content ol {
+            margin: 1.5rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .article-content li {
+            margin-bottom: 0.75rem;
+        }
+
+        .article-content hr {
+            border: none;
+            border-top: 2px solid var(--marker-black);
+            margin: 3rem 0;
+        }
+
+        .article-content code {
+            font-family: monospace;
+            background: #f5f5f5;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.95em;
+        }
+
+        .article-content pre {
+            background: var(--marker-black);
+            color: #f5f5f5;
+            padding: 1.5rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 2rem 0;
+        }
+
+        .article-content pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+
+        /* Author Box */
+        .author-box {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            background: #f9f9f9;
+            border: 3px solid var(--marker-black);
+            padding: 2rem;
+            margin-top: 4rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .author-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid var(--marker-black);
+            object-fit: cover;
+        }
+
+        .author-info h4 {
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .author-info p {
+            font-size: 0.95rem;
+            color: #555;
+            margin-bottom: 0;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem;
+            border-top: 4px solid var(--marker-black);
+            text-align: center;
+            font-family: 'Caveat', cursive;
+            font-size: 1.2rem;
+            color: var(--marker-black);
+            background: var(--sticky-yellow);
+        }
+
+        /* Mobile Navigation */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 32px;
+            height: 32px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 1001;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background: var(--marker-black);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: 999;
+            padding: 6rem 2rem 2rem;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+        }
+
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        .mobile-menu ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu a {
+            display: block;
+            font-family: 'Caveat', cursive;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--marker-black);
+            text-decoration: none;
+            padding: 1rem 1.5rem;
+            background: white;
+            border: 3px solid var(--marker-black);
+            box-shadow: 4px 4px 0 var(--marker-black);
+            transition: all 0.2s ease;
+        }
+
+        .mobile-menu a:hover,
+        .mobile-menu a:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 var(--marker-black);
+        }
+
+        .mobile-menu .nav-cta {
+            background: var(--sticky-yellow);
+            margin-top: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            nav ul {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            article {
+                padding: 8rem 1.5rem 4rem;
+            }
+
+            .article-title {
+                font-size: 2rem;
+            }
+
+            .article-content {
+                font-size: 1.05rem;
+            }
+
+            .author-box {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="/" class="logo">MB</a>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/#positioning">Who I Am</a></li>
+                <li><a href="/#ai">AI Expertise</a></li>
+                <li><a href="/#track-record">Track Record</a></li>
+                <li><a href="/#services">Services</a></li>
+                <li><a href="/blog/">Resources</a></li>
+                <li><a href="/#contact" class="nav-cta">Get in Touch</a></li>
+            </ul>
+            <button class="hamburger" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="mobile-menu">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/#positioning">Who I Am</a></li>
+            <li><a href="/#ai">AI Expertise</a></li>
+            <li><a href="/#track-record">Track Record</a></li>
+            <li><a href="/#services">Services</a></li>
+            <li><a href="/blog/">Resources</a></li>
+            <li><a href="/#contact" class="nav-cta">Get in Touch</a></li>
+        </ul>
+    </div>
+
+    <article>
+        <a href="/blog/" class="back-link">Back to Resources</a>
+
+        <header class="article-header">
+            <div class="article-date">JANUARY 21, 2026</div>
+            <h1 class="article-title">How I Built an AI Content Engine in Claude Code</h1>
+            <span class="article-category">AI Tinkering</span>
+        </header>
+
+        <div class="article-content">
+            <p>I just built a system that takes me from interview to published blog post. Not a template. Not a prompt I copy-paste. A system that remembers how I want to write and gets better every time I use it.</p>
+
+            <p>Claude Code lets you create persistent skills, markdown files that define how you want the AI to behave for specific tasks. Unlike chat prompts that disappear, skills stay. They accumulate. They become institutional knowledge for your AI assistant.</p>
+
+            <h2>The Situation</h2>
+
+            <p>I wanted to write more. Specifically, I wanted to turn the marketing stories in my head into blog posts that could support my job search. But every time I sat down to write, I hit the same walls: blank page paralysis, inconsistent voice, forgetting SEO basics, manual publishing steps that broke my flow.</p>
+
+            <p>I'd been using AI to help with writing, but it was always one-off. Paste a prompt, get output, manually fix everything, forget what I fixed, repeat the same mistakes next time.</p>
+
+            <p>What I needed was a way to encode my preferences once and have them persist.</p>
+
+            <h2>What I Built</h2>
+
+            <p>The system has five parts that work together.</p>
+
+            <p><strong>Voice Interview (Custom GPT)</strong></p>
+
+            <p>I built an AI interviewer in ChatGPT that knows marketing benchmarks and pushes past vague answers. When I say "we improved performance," it asks "by how much?" When I mention a campaign, it asks what went wrong. It pulls the real stories out of me through conversation, then consolidates the transcript into structured material I can hand off to the next step.</p>
+
+            <p><strong>Narrative Copywriting Skill</strong></p>
+
+            <p>This is a Claude Code skill that takes interview transcripts or topic briefs and writes in my voice. I spent some time teaching it how I actually want to sound. No em dashes. No "full stop" for emphasis. Frame problems as design gaps, not incompetence. Lead titles with business metrics. End with customer impact, not business jargon.</p>
+
+            <p>Every correction I made during editing became a permanent rule. The skill file grew as I refined it.</p>
+
+            <p><strong>Executive Reviewer Skill</strong></p>
+
+            <p>Reads drafts through a CEO's eyes. Does this position me as a business leader or a marketing tactician? Are the metrics ones a board would care about? It flags places where I could be more accurate and add nuance. For case studies and thought leadership, this catches the difference between sounding like a marketer and sounding like someone who belongs at the leadership table.</p>
+
+            <p><strong>SEO Review Skill</strong></p>
+
+            <p>Checks title length, meta description, slug structure, header hierarchy, internal linking opportunities. Returns specific suggestions with character counts and alternatives, not vague advice about "optimizing for search."</p>
+
+            <p><strong>Publish Skill</strong></p>
+
+            <p>Converts the approved markdown to HTML using my site's template, updates the blog index, updates the sitemap, commits to git, and pushes to production. One command. The post is live.</p>
+
+            <h2>What Happened</h2>
+
+            <p>I used this system to write <a href="/blog/swing-demand-gen-system">my first case study</a>. The interview surfaced stories I'd forgotten. The copywriting skill produced a draft that was 80% there. The executive reviewer caught places where I was underselling the business impact. SEO review tightened the title and meta description.</p>
+
+            <p>The whole process felt like working with a team that already knew my preferences. No re-explaining. No starting from scratch.</p>
+
+            <p>The skill files are version controlled. When I refine something, it sticks. The next post will be better because this post taught the system something.</p>
+
+            <p>The initial skills took a couple hours to build. But I refined them throughout the process of writing and editing the first post. Every time I corrected something, I added the rule to the skill. By the end, the system knew my preferences better than I could have specified upfront.</p>
+
+            <h2>What I'd Do Differently</h2>
+
+            <p>I'd build the voice interview GPT earlier. The quality of the output depends entirely on the quality of the input. Garbage in, garbage out. The interview step is where the real stories surface. Everything downstream is just formatting and polish.</p>
+
+            <p>I'd also create separate reviewer personas faster. The executive reviewer works for case studies. But for AI tinkering posts like this one, I need a different lens. That's next.</p>
+
+            <h2>The Takeaway</h2>
+
+            <p>This is what AI for marketers actually looks like. Not replacing the thinking. Encoding the thinking so you don't have to repeat it.</p>
+
+            <p>The system remembers what I taught it. It applies those lessons consistently. And it frees me to focus on the parts that actually require judgment: what stories to tell, what points to make, what to cut.</p>
+
+            <p>The post is live. The system is ready for the next one.</p>
+        </div>
+
+        <div class="author-box">
+            <img src="/Website Headshot.jpg" alt="Matt Bernardy" class="author-image">
+            <div class="author-info">
+                <h4>Matt Bernardy</h4>
+                <p>Marketing executive and engine builder. I help startups scale from chaos to clarity.</p>
+            </div>
+        </div>
+    </article>
+
+    <footer>
+        &copy; 2026 Matt Bernardy - Building marketing engines that scale
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const hamburger = document.querySelector('.hamburger');
+        const mobileMenu = document.querySelector('.mobile-menu');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+            document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+        });
+
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                mobileMenu.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
