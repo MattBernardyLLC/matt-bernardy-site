@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <title>The Four-Year Road to 3x LTV/CAC: A Demand Gen Case Study - Matt Bernardy</title>
+    <meta name="description" content="How redesigning demand gen around supply reliability drove 3x improvement in LTV/CAC and 125% increase in school partner LTV at Swing Education.">
+    <meta property="og:title" content="The Four-Year Road to 3x LTV/CAC: A Demand Gen Case Study">
+    <meta property="og:description" content="How redesigning demand gen around supply reliability drove 3x improvement in LTV/CAC and 125% increase in school partner LTV at Swing Education.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://www.mattbernardy.com/blog/swing-demand-gen-system.html">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Permanent+Marker&family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --whiteboard: #fafafa;
+            --sticky-yellow: #fff740;
+            --sticky-blue: #9ddbf5;
+            --sticky-green: #b4f7a8;
+            --sticky-pink: #ffb3d9;
+            --marker-black: #2d3436;
+            --marker-blue: #0984e3;
+            --marker-red: #d63031;
+            --shadow: rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #ffffff;
+            color: var(--marker-black);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(250, 250, 250, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            border-bottom: 3px solid var(--marker-black);
+            box-shadow: 0 4px 6px var(--shadow);
+        }
+
+        nav .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 1.8rem;
+            color: var(--marker-black);
+            letter-spacing: 0.05em;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.75rem;
+            align-items: center;
+            flex-wrap: nowrap;
+        }
+
+        nav li {
+            flex-shrink: 0;
+        }
+
+        nav a {
+            color: var(--marker-black);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-family: 'Caveat', cursive;
+            font-size: 1.3rem;
+            position: relative;
+            white-space: nowrap;
+            display: inline-block;
+            padding-bottom: 4px;
+        }
+
+        nav a:not(.nav-cta)::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: var(--sticky-yellow);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        nav a:not(.nav-cta):hover::after {
+            transform: scaleX(1);
+        }
+
+        .nav-cta {
+            background: var(--sticky-yellow);
+            color: var(--marker-black);
+            padding: 0.5rem 1.25rem;
+            border: 3px solid var(--marker-black);
+            font-weight: 700;
+            box-shadow: 3px 3px 0 var(--marker-black);
+            transform: rotate(-1deg);
+            transition: all 0.3s;
+        }
+
+        .nav-cta:hover {
+            transform: rotate(0deg) translateY(-3px);
+            box-shadow: 5px 5px 0 var(--marker-black);
+        }
+
+        /* Article Container */
+        article {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 10rem 2rem 6rem;
+        }
+
+        /* Back Link */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Caveat', cursive;
+            font-size: 1.2rem;
+            color: var(--marker-black);
+            text-decoration: none;
+            margin-bottom: 2rem;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--marker-blue);
+        }
+
+        .back-link::before {
+            content: '←';
+        }
+
+        /* Article Header */
+        .article-header {
+            margin-bottom: 3rem;
+        }
+
+        .article-date {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 0.85rem;
+            color: var(--marker-blue);
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        .article-title {
+            font-family: 'Lora', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--marker-black);
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        .article-category {
+            display: inline-block;
+            font-family: 'Caveat', cursive;
+            font-size: 1.1rem;
+            color: var(--marker-blue);
+        }
+
+        /* Article Content */
+        .article-content {
+            font-family: 'Lora', serif;
+            font-size: 1.15rem;
+            line-height: 1.9;
+            color: #333;
+        }
+
+        .article-content p {
+            margin-bottom: 1.75rem;
+        }
+
+        .article-content h2 {
+            font-family: 'Caveat', cursive;
+            font-size: 2rem;
+            color: var(--marker-black);
+            margin: 3rem 0 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .article-content h2::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: -3px;
+            right: -3px;
+            height: 8px;
+            background: var(--sticky-yellow);
+            z-index: -1;
+        }
+
+        .article-content h3 {
+            font-family: 'Caveat', cursive;
+            font-size: 1.6rem;
+            color: var(--marker-black);
+            margin: 2.5rem 0 1rem;
+        }
+
+        .article-content em {
+            font-style: italic;
+        }
+
+        .article-content strong {
+            font-weight: 700;
+        }
+
+        .article-content a {
+            color: var(--marker-blue);
+            text-decoration: underline;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 2px;
+        }
+
+        .article-content a:hover {
+            background: var(--sticky-yellow);
+        }
+
+        .article-content blockquote {
+            background: var(--sticky-yellow);
+            border-left: 5px solid var(--marker-black);
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            font-style: italic;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .article-content ul,
+        .article-content ol {
+            margin: 1.5rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .article-content li {
+            margin-bottom: 0.75rem;
+        }
+
+        .article-content hr {
+            border: none;
+            border-top: 2px solid var(--marker-black);
+            margin: 3rem 0;
+        }
+
+        .article-content code {
+            font-family: monospace;
+            background: #f5f5f5;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.95em;
+        }
+
+        .article-content pre {
+            background: var(--marker-black);
+            color: #f5f5f5;
+            padding: 1.5rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 2rem 0;
+        }
+
+        .article-content pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+
+        /* Author Box */
+        .author-box {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            background: #f9f9f9;
+            border: 3px solid var(--marker-black);
+            padding: 2rem;
+            margin-top: 4rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .author-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid var(--marker-black);
+            object-fit: cover;
+        }
+
+        .author-info h4 {
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .author-info p {
+            font-size: 0.95rem;
+            color: #555;
+            margin-bottom: 0;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem;
+            border-top: 4px solid var(--marker-black);
+            text-align: center;
+            font-family: 'Caveat', cursive;
+            font-size: 1.2rem;
+            color: var(--marker-black);
+            background: var(--sticky-yellow);
+        }
+
+        /* Mobile Navigation */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 32px;
+            height: 32px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 1001;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background: var(--marker-black);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: 999;
+            padding: 6rem 2rem 2rem;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+        }
+
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        .mobile-menu ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu a {
+            display: block;
+            font-family: 'Caveat', cursive;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--marker-black);
+            text-decoration: none;
+            padding: 1rem 1.5rem;
+            background: white;
+            border: 3px solid var(--marker-black);
+            box-shadow: 4px 4px 0 var(--marker-black);
+            transition: all 0.2s ease;
+        }
+
+        .mobile-menu a:hover,
+        .mobile-menu a:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 var(--marker-black);
+        }
+
+        .mobile-menu .nav-cta {
+            background: var(--sticky-yellow);
+            margin-top: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            nav ul {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            article {
+                padding: 8rem 1.5rem 4rem;
+            }
+
+            .article-title {
+                font-size: 2rem;
+            }
+
+            .article-content {
+                font-size: 1.05rem;
+            }
+
+            .author-box {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="/" class="logo">MB</a>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/#positioning">Who I Am</a></li>
+                <li><a href="/#ai">AI Expertise</a></li>
+                <li><a href="/#track-record">Track Record</a></li>
+                <li><a href="/#services">Services</a></li>
+                <li><a href="/blog/">Resources</a></li>
+                <li><a href="/#contact" class="nav-cta">Get in Touch</a></li>
+            </ul>
+            <button class="hamburger" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="mobile-menu">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/#positioning">Who I Am</a></li>
+            <li><a href="/#ai">AI Expertise</a></li>
+            <li><a href="/#track-record">Track Record</a></li>
+            <li><a href="/#services">Services</a></li>
+            <li><a href="/blog/">Resources</a></li>
+            <li><a href="/#contact" class="nav-cta">Get in Touch</a></li>
+        </ul>
+    </div>
+
+    <article>
+        <a href="/blog/" class="back-link">Back to Resources</a>
+
+        <header class="article-header">
+            <div class="article-date">JANUARY 21, 2026</div>
+            <h1 class="article-title">The Four-Year Road to 3x LTV/CAC: A Demand Gen Case Study</h1>
+            <span class="article-category">Case Studies</span>
+        </header>
+
+        <div class="article-content">
+            <p>When I joined Swing Education, we were generating thousands of substitute teacher leads. The top of the funnel looked healthy. But fill rates were inconsistent, which meant revenue was capped by supply, not demand. We couldn't figure out why more spend wasn't translating into more supply.</p>
+
+            <p>Leads weren't converting into substitutes who were accepted into the product and actually available to work. We had a demand gen system optimized for volume, not usable supply. In a marketplace, without supply, you can't generate revenue.</p>
+
+            <h2>The Situation</h2>
+
+            <p>Swing connects schools with substitute teachers. The growth constraint wasn't demand from schools. It was supply reliability. We needed to figure out why substitute teachers weren't activating.</p>
+
+            <p>We surveyed and talked directly to substitute teachers about how they decide whether to sign up and where to work. Two things came through clearly: they wanted jobs close to home, and they wanted to know what the job paid before committing.</p>
+
+            <p>Proximity mattered more than anything else. But we were recruiting at the county level, a geographic scope that didn't reflect how substitutes actually behaved. The GTM motion wasn't broken. It just wasn't designed around what drove activation.</p>
+
+            <h2>What We Did</h2>
+
+            <p>This wasn't a campaign. It was a four-year system redesign, done in phases so we didn't break supply while we fixed how we generated it.</p>
+
+            <p><strong>First, I reframed what success meant.</strong> Lead volume became a vanity metric. We started tracking lead-to-activation conversion, activation rates, and active substitutes per market. With six-figure monthly ad budgets at stake, I identified an opportunity to align the leadership team around supply as the core growth lever and drove the team toward that shared understanding.</p>
+
+            <p><strong>We tightened geography from counties to neighborhoods.</strong> A substitute in East San Jose doesn't want to drive to Palo Alto. We stopped pretending they would.</p>
+
+            <p><strong>We tested sixteen channels, then cut to six.</strong> Surge testing showed us where each channel hit diminishing returns by market. Instead of spreading spend thin, we became intentional about where, when, and how we invested. We built deeper partnerships with the platforms that actually worked.</p>
+
+            <p><strong>We built a weekly operating rhythm.</strong> Every week, I sat with ops, finance, and sales to review forecasted school demand by market and adjust substitute teacher marketing spend to match. Over-invest in a saturated market and you waste money. Under-invest in a growing one and schools churn. This meeting became how the company allocated growth capital.</p>
+
+            <p>As efficiency improved, we shifted spend from headcount to programmatic channels.</p>
+
+            <h2>What Happened</h2>
+
+            <p>We hit our operational and active substitute goals throughout the process. Over four years, LTV/CAC improved by 3x.</p>
+
+            <p>That number compounds. Tighter targeting reduced wasted spend. Channel discipline lowered CAC. Surge testing let us invest up to efficiency thresholds instead of scaling blindly. All of it layered.</p>
+
+            <p>The metric that mattered most was downstream: 125% increase in school partner LTV. When substitutes actually showed up, schools used the platform more. Fill reliability drove retention. Marketing wasn't just filling a funnel. It was improving the product experience for the other side of the marketplace.</p>
+
+            <p>We created surplus supply at a lower total cost, without adding headcount. That's leverage.</p>
+
+            <h2>What I'd Do Differently</h2>
+
+            <p>Customer advocacy should have come earlier.</p>
+
+            <p>Substitute teachers trusted other substitutes more than they trusted ads. Referrals, user-generated content, community-driven proof. All of it could have accelerated trust, reduced CAC faster, and improved activation earlier in the lifecycle.</p>
+
+            <h2>The Takeaway</h2>
+
+            <p>This initiative wasn't about optimizing ads. It was about designing a demand gen system that created surplus supply, improved unit economics, and unlocked durable growth.</p>
+
+            <p>By aligning marketing strategy to the needs of the customer, we changed the trajectory of the company.</p>
+        </div>
+
+        <div class="author-box">
+            <img src="/Website Headshot.jpg" alt="Matt Bernardy" class="author-image">
+            <div class="author-info">
+                <h4>Matt Bernardy</h4>
+                <p>Marketing executive and engine builder. I help startups scale from chaos to clarity.</p>
+            </div>
+        </div>
+    </article>
+
+    <footer>
+        &copy; 2026 Matt Bernardy - Building marketing engines that scale
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const hamburger = document.querySelector('.hamburger');
+        const mobileMenu = document.querySelector('.mobile-menu');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+            document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+        });
+
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                mobileMenu.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
