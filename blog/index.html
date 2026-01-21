@@ -444,14 +444,14 @@
         </div>
 
         <div class="post-list">
-            <article class="post-item">
+            <article class="post-item" data-category="AI Tinkering">
                 <div class="post-date">JANUARY 20, 2026</div>
                 <a href="/blog/chatgpt-verbosity-fix.html" class="post-title">I Fixed My ChatGPT Verbosity Problem with One Prompt Change</a>
                 <p class="post-excerpt">Three paragraphs when five words would do. Then I found Langfuse's internal productivity handbook with seven rules that fix AI verbosity immediately.</p>
                 <span class="post-category">AI Tinkering</span>
             </article>
 
-            <article class="post-item">
+            <article class="post-item" data-category="AI Tinkering">
                 <div class="post-date">DECEMBER 12, 2025</div>
                 <a href="/blog/goggins-chatbot.html" class="post-title">I Hired David Goggins to Yell at Me. He's a Chatbot.</a>
                 <p class="post-excerpt">I've been stuck. The kind of stuck where you know you're stuck, which somehow makes it worse. So I did what I always do when the mental gears seize up: I started reading.</p>
@@ -466,11 +466,25 @@
     </footer>
 
     <script>
-        // Category tab switching
+        // Category tab switching and filtering
         document.querySelectorAll('.category-tab').forEach(tab => {
             tab.addEventListener('click', function() {
+                // Update active tab
                 document.querySelector('.category-tab.active').classList.remove('active');
                 this.classList.add('active');
+
+                // Filter posts
+                const selectedCategory = this.textContent.trim();
+                const posts = document.querySelectorAll('.post-item');
+
+                posts.forEach(post => {
+                    if (selectedCategory === 'All categories') {
+                        post.style.display = 'block';
+                    } else {
+                        const postCategory = post.dataset.category;
+                        post.style.display = postCategory === selectedCategory ? 'block' : 'none';
+                    }
+                });
             });
         });
 
