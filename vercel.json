@@ -10,6 +10,17 @@
       "source": "/resources",
       "destination": "/blog/",
       "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "query",
+          "key": "hsLang"
+        }
+      ],
+      "destination": "/:path*",
+      "permanent": true
     }
   ]
 }
