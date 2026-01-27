@@ -1,3 +1,15 @@
 {
-  "cleanUrls": true
+  "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/resources/building-data-driven-culture",
+      "destination": "/blog/",
+      "permanent": true
+    },
+    {
+      "source": "/resources",
+      "destination": "/blog/",
+      "permanent": true
+    }
+  ]
 }
