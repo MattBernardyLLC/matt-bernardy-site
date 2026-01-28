@@ -1,4 +1,4 @@
-# How I Improved LTV:CAC by 30% with a Brand Experiment: A Case Study
+# How I Broke Through a Growth Plateau with a Brand Experiment: A Case Study
 
 Sacramento was a mature market for Swing Education. We'd optimized everything we could optimize. Lead volume had plateaued. Incremental spend in paid channels showed diminishing returns. Cost per lead kept climbing as we chased volume that wasn't there.
 
