@@ -12,6 +12,11 @@
       "permanent": true
     },
     {
+      "source": "/resources/abm-playbook",
+      "destination": "/blog/",
+      "permanent": true
+    },
+    {
       "source": "/:path*",
       "has": [
         {
