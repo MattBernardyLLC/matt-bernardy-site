@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9Z0M701VZ7"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-9Z0M701VZ7');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Growth Plateau Animation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #fafafa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .canvas {
+            width: 800px;
+            height: 800px;
+            background: #fafafa;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sticky-note {
+            width: 520px;
+            height: 420px;
+            background: #fff740;
+            border: 3px solid #2d3436;
+            box-shadow: 6px 6px 0 rgba(0,0,0,0.15);
+            transform: rotate(-1.5deg);
+            position: relative;
+            padding: 30px 35px 35px;
+        }
+
+        .sticky-note::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 22px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 3px;
+        }
+
+        .chart-title {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 14px;
+            color: #2d3436;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .chart-area {
+            width: 100%;
+            height: 320px;
+            position: relative;
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .burst {
+            opacity: 0;
+        }
+
+        .burst-line {
+            stroke: #fff740;
+            stroke-width: 3;
+            stroke-linecap: round;
+        }
+    </style>
+</head>
+<body>
+    <div class="canvas">
+        <div class="sticky-note">
+            <div class="chart-title" id="chartTitle">LEAD VOLUME</div>
+            <div class="chart-area">
+                <svg viewBox="0 0 450 320" id="chart">
+
+                    <!-- Y axis -->
+                    <path d="M 40,12 Q 41,45 40,80 Q 39,115 40,150 Q 41,185 40,220 Q 39,255 40,278"
+                          stroke="#2d3436" stroke-width="2.5" stroke-linecap="round" fill="none" />
+                    <!-- X axis -->
+                    <path d="M 40,280 Q 80,281 140,279 Q 200,281 260,280 Q 330,279 390,281 Q 415,280 430,280"
+                          stroke="#2d3436" stroke-width="2.5" stroke-linecap="round" fill="none" />
+
+                    <!-- Ceiling / plateau line -->
+                    <path id="ceiling"
+                          d="M 40,120 Q 90,121 140,119 Q 190,121 240,120 Q 290,119 340,121 Q 390,120 430,120"
+                          stroke="#d63031" stroke-width="2.5" stroke-dasharray="10, 8"
+                          stroke-linecap="round" fill="none" />
+                    <text id="ceilingLabel" x="434" y="118"
+                          font-family="Caveat, cursive" font-size="18" font-weight="700"
+                          fill="#d63031">plateau</text>
+
+                    <!--
+                        Growth line: one smooth hand-crafted curve.
+                        Rises from bottom-left, sweeps up, hits ceiling,
+                        gentle wave along ceiling (3 soft bumps), then breakthrough.
+                    -->
+                    <path id="growthLine"
+                          d="M 55,272
+                             C 75,260 100,240 130,200
+                             C 155,165 175,140 200,122
+                             C 210,115 215,130 225,140
+                             C 235,148 245,130 255,122
+                             C 262,117 268,132 278,134
+                             C 288,136 295,124 305,122
+                             C 312,120 320,127 330,125
+                             C 336,124 338,122 342,121"
+                          stroke="#0984e3" stroke-width="5.5" stroke-linecap="round"
+                          stroke-linejoin="round" fill="none" />
+
+                    <!-- Breakthrough line -->
+                    <path id="breakthroughLine"
+                          d="M 342,121
+                             C 355,105 370,80 390,55
+                             C 400,42 410,32 418,25"
+                          stroke="#0984e3" stroke-width="5.5" stroke-linecap="round"
+                          stroke-linejoin="round" fill="none" />
+
+                    <!-- Brand campaign label below x-axis -->
+                    <text x="290" y="310"
+                          font-family="'Permanent Marker', cursive" font-size="14"
+                          fill="#2d3436" text-anchor="middle"
+                          letter-spacing="0.08em">BRAND CAMPAIGN</text>
+
+                    <!-- Arrowhead -->
+                    <line id="arrowArm1" x1="0" y1="0" x2="0" y2="0"
+                          stroke="#0984e3" stroke-width="5" stroke-linecap="round" opacity="0" />
+                    <line id="arrowArm2" x1="0" y1="0" x2="0" y2="0"
+                          stroke="#0984e3" stroke-width="5" stroke-linecap="round" opacity="0" />
+
+                    <!-- Burst effect -->
+                    <g class="burst" id="burst" transform="translate(342, 121)">
+                        <line class="burst-line" x1="0" y1="-8" x2="0" y2="-22" />
+                        <line class="burst-line" x1="8" y1="-6" x2="18" y2="-18" />
+                        <line class="burst-line" x1="-8" y1="-6" x2="-18" y2="-18" />
+                        <line class="burst-line" x1="6" y1="0" x2="20" y2="0" />
+                        <line class="burst-line" x1="-6" y1="0" x2="-20" y2="0" />
+                    </g>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const growthLine = document.getElementById('growthLine');
+        const breakthroughLine = document.getElementById('breakthroughLine');
+        const arrowArm1 = document.getElementById('arrowArm1');
+        const arrowArm2 = document.getElementById('arrowArm2');
+        const ceiling = document.getElementById('ceiling');
+        const ceilingLabel = document.getElementById('ceilingLabel');
+        const burst = document.getElementById('burst');
+        const chartTitle = document.getElementById('chartTitle');
+
+        // Get path lengths for stroke-dashoffset animation
+        const growthLen = growthLine.getTotalLength();
+        const breakthroughLen = breakthroughLine.getTotalLength();
+
+        // Hide both lines initially using dash trick
+        growthLine.style.strokeDasharray = growthLen;
+        growthLine.style.strokeDashoffset = growthLen;
+        breakthroughLine.style.strokeDasharray = breakthroughLen;
+        breakthroughLine.style.strokeDashoffset = breakthroughLen;
+
+        // Animate drawing a path over a duration, calling onProgress with 0-1
+        function animateDraw(element, totalLen, duration, onProgress, onDone) {
+            const start = performance.now();
+            function step(now) {
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / duration, 1);
+                // Ease-out for natural drawing feel
+                const eased = 1 - Math.pow(1 - progress, 2);
+                element.style.strokeDashoffset = totalLen * (1 - eased);
+
+                if (onProgress) onProgress(eased);
+
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                } else {
+                    if (onDone) onDone();
+                }
+            }
+            requestAnimationFrame(step);
+        }
+
+
+        // Start sequence
+        setTimeout(() => {
+            animateDraw(growthLine, growthLen, 1800,
+                    null,
+                    () => {
+                        animateDraw(breakthroughLine, breakthroughLen, 500, null, () => {
+                                // Arrowhead
+                                const tipX = 418, tipY = 25;
+                                // Direction from second-to-last to last point of breakthrough
+                                const dx = 418 - 390, dy = 25 - 55;
+                                const len = Math.sqrt(dx * dx + dy * dy);
+                                const nx = dx / len, ny = dy / len;
+                                const px = -ny, py = nx;
+                                const armLen = 14, spread = 8;
+
+                                arrowArm1.setAttribute('x1', tipX);
+                                arrowArm1.setAttribute('y1', tipY);
+                                arrowArm1.setAttribute('x2', (tipX - nx * armLen + px * spread).toFixed(1));
+                                arrowArm1.setAttribute('y2', (tipY - ny * armLen + py * spread).toFixed(1));
+                                arrowArm2.setAttribute('x1', tipX);
+                                arrowArm2.setAttribute('y1', tipY);
+                                arrowArm2.setAttribute('x2', (tipX - nx * armLen - px * spread).toFixed(1));
+                                arrowArm2.setAttribute('y2', (tipY - ny * armLen - py * spread).toFixed(1));
+                                arrowArm1.style.transition = 'opacity 0.15s';
+                                arrowArm1.style.opacity = '1';
+                                arrowArm2.style.transition = 'opacity 0.15s';
+                                arrowArm2.style.opacity = '1';
+
+                            });
+                    }
+                );
+        }, 500);
+    </script>
+</body>
+</html>
